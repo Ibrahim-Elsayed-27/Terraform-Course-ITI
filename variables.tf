@@ -23,3 +23,13 @@ variable "infra_region" {
   description = "Whether to map public IP on launch for public subnet"
   type        = string
 }
+
+variable "notification_email" {
+  description = "Email address for statefile update notifications"
+  type        = string
+}
+
+variable "s3_bucket_id" {
+  description = "ID of the S3 bucket for statefile storage"
+  type        = string
+}

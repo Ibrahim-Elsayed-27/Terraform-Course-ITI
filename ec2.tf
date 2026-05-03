@@ -8,7 +8,7 @@ resource "aws_instance" "bastion" {
 }
 resource "null_resource" "bastion_ip" {
   provisioner "local-exec" {
-    command = "echo ${bastion.public_ip}"
+    command = "echo ${aws_instance.bastion.public_ip}"
   }
 }
 
