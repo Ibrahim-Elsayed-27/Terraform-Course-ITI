@@ -1,0 +1,50 @@
+# Terraform state files (contain sensitive data)
+
+*.tfstate
+*.tfstate.*
+
+# Crash logs
+
+crash.log
+crash.*.log
+
+# Sensitive variable files
+
+*.tfvars
+*.tfvars.json
+
+# Terraform plan output
+
+*.tfplan
+
+# Terraform CLI config files
+
+.terraformrc
+terraform.rc
+
+# Ignore .terraform directory (providers, modules, plugins)
+
+.terraform/
+
+# Ignore lock file ONLY if you intentionally don't want reproducibility
+
+# (usually you SHOULD commit this file)
+
+# .terraform.lock.hcl
+
+# Override files (used locally, not for version control)
+
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Environment variables files
+
+.env
+.env.*
+
+# macOS / Linux / Windows junk
+
+.DS_Store
+Thumbs.db
