@@ -17,9 +17,3 @@ variable "map_public_ip_on_launch" {
   description = "Whether to map public IP on launch for public subnet"
   type        = bool
 }
-
-
-variable "infra_region" {
-  description = "Whether to map public IP on launch for public subnet"
-  type        = string
-}
