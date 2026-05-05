@@ -155,6 +155,11 @@ Region: eu-central-1
 VPC CIDR: 10.0.0.0/16
 Public Subnet: 10.0.1.0/24
 Private Subnet: 10.0.2.0/24
+
+EC2 Instances:
+  - Bastion Host: t3.micro (Public Subnet)
+  - Application Server: t3.micro (Private Subnet)
+
 RDS Instance: db.t3.micro (10GB)
 ElastiCache Node: cache.t3.micro
 ```
@@ -166,6 +171,11 @@ Region: us-east-1
 VPC CIDR: 10.1.0.0/16
 Public Subnet: 10.1.1.0/24
 Private Subnet: 10.1.2.0/24
+
+EC2 Instances:
+  - Bastion Host: t3.micro (Public Subnet)
+  - Application Server: t3.micro (Private Subnet)
+
 RDS Instance: db.t3.small (20GB)
 ElastiCache Node: cache.t3.small
 ```
@@ -247,11 +257,25 @@ terraform destroy --var-file="prod.tfvars"
 
 The infrastructure exposes the following outputs:
 
+### Compute Outputs
+
+- **Bastion Host**
+  - Instance ID
+  - Public IP Address (use for SSH access)
+  - Private IP Address
+
+- **Application Server**
+  - Instance ID
+  - Private IP Address
+  - Security Group ID
+  - (Accessible via bastion host using SSH tunneling)
+
 ### Network Outputs
 
 - VPC ID
-- Subnet IDs
+- Subnet IDs (Public and Private)
 - VPC CIDR Block
+- Security Group IDs
 
 ### Database Outputs
 
@@ -259,10 +283,12 @@ The infrastructure exposes the following outputs:
 - RDS Address
 - RDS Port
 - RDS Database Name
-- ElastiCache Endpoint
+- RDS Master Username
+- RDS Security Group ID
+- ElastiCache Endpoint (hostname)
 - ElastiCache Port
 - ElastiCache Cluster ID
-- Security Group IDs
+- ElastiCache Security Group ID
 
 ### Email Outputs
 
@@ -309,16 +335,19 @@ This project covers the following Terraform and AWS concepts:
    - Public and private subnets
    - Route tables and internet gateway
    - Security groups and network access control
+   - Bastion host security pattern
 
-3. **Database Services**
+3. **Compute Services**
+   - EC2 instance provisioning
+   - Bastion host pattern for secure access
+   - Application server in private subnet
+   - Instance configuration with security groups
+
+4. **Database Services**
    - RDS MySQL provisioning
    - ElastiCache Redis deployment
    - Database and cache integration
-
-4. **Compute Services**
-   - EC2 instance provisioning
-   - Bastion host pattern
-   - Application server in private subnet
+   - Private subnet placement for data security
 
 5. **Monitoring & Notifications**
    - Lambda functions
@@ -333,3 +362,46 @@ This project covers the following Terraform and AWS concepts:
 - RDS and ElastiCache use the same availability zone for optimal performance
 - Application server in private subnet can communicate with bastion via SSH and access databases
 - Port 3000 is reserved for application server communication
+- EC2 instances are deployed in both development and production environments
+
+## Accessing Your Resources
+
+### Bastion Host Access
+
+1. Get the bastion host public IP from Terraform outputs:
+
+   ```bash
+   terraform output bastion_public_ip
+   ```
+
+2. SSH into the bastion host:
+   ```bash
+   ssh -i your-key.pem ec2-user@<bastion-public-ip>
+   ```
+
+### Application Server Access (via Bastion)
+
+1. SSH from bastion to application server using private IP:
+
+   ```bash
+   # From bastion host
+   ssh -i your-key.pem ec2-user@<application-private-ip>
+   ```
+
+2. Or use SSH tunneling from local machine:
+   ```bash
+   ssh -i your-key.pem -J ec2-user@<bastion-public-ip> ec2-user@<application-private-ip>
+   ```
+
+### Database & Cache Access
+
+1. From application server, connect to RDS:
+
+   ```bash
+   mysql -h <rds-endpoint> -u <username> -p
+   ```
+
+2. From application server, connect to ElastiCache:
+   ```bash
+   redis-cli -h <elasticache-endpoint> -p 6379
+   ```
