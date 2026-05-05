@@ -39,3 +39,4 @@ resource "aws_vpc_security_group_ingress_rule" "allow_port_3000_ipv4_local" {
   ip_protocol       = "tcp"
   to_port           = 3000
 }
+

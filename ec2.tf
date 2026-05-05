@@ -19,3 +19,4 @@ resource "aws_instance" "application" {
   subnet_id              = module.network.private_subnet_id
   vpc_security_group_ids = [aws_security_group.allow_ssh_and_3000_local.id]
 }
+
