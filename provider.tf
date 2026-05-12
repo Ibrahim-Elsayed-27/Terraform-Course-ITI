@@ -1,4 +1,3 @@
 provider "aws" {
-  region  = var.infra_region
-  profile = "default"
+  region = var.infra_region
 }
