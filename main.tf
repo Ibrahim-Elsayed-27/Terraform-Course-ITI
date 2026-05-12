@@ -7,7 +7,7 @@ module "network" {
   map_public_ip_on_launch   = var.map_public_ip_on_launch
 }
 
-module "database" {
+/* module "database" {
   source = "./database"
 
   vpc_id                = module.network.vpc_id
@@ -19,7 +19,7 @@ module "database" {
   rds_instance_class    = var.rds_instance_class
   elasticache_node_type = var.elasticache_node_type
 }
-
+ */
 module "email" {
   source = "./email"
 
